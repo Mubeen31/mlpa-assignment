@@ -120,7 +120,7 @@ def summary_value(n_intervals, select_neighbors):
     mv_mae = metrics.mean_absolute_error(last_day_hourly_values['Power (KW)'], predicted_data['Power (KW)'])
     mv_rs = metrics.r2_score(last_day_hourly_values['Power (KW)'], predicted_data['Power (KW)'])
 
-    rfr_yes = KNeighborsRegressor(n_neighbors = select_neighbors)
+    rfr_yes = KNeighborsRegressor(n_neighbors = 1)
     rfr_yes.fit(yes_independent_columns, yes_dependent_column)
     rfr_yes_return_array = rfr_yes.predict(forcasted_yes_values)
     rfr_yes_predicted_data = pd.DataFrame(rfr_yes_return_array, columns = ['Power (KW)'])
