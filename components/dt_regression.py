@@ -14,46 +14,6 @@ import sqlalchemy
 from dash import dash_table as dt
 import time
 
-n = 1
-now = datetime.now() + timedelta(hours = n)
-time_name = now.strftime('%H:%M:%S')
-header_list = ['Date Time', 'Voltage', 'Current']
-df = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/sensors_data.csv',
-                 names = header_list)
-df['Power (W)'] = df['Voltage'] * df['Current']
-df['Power (KW)'] = df['Power (W)'] / 1000
-df['Date Time'] = pd.to_datetime(df['Date Time'])
-df['Date'] = df['Date Time'].dt.date
-df['Date'] = pd.to_datetime(df['Date'])
-df['Time'] = pd.to_datetime(df['Date Time']).dt.time
-df['Hour'] = pd.to_datetime(df['Date Time']).dt.hour
-df['Time'] = df['Time'].astype(str)
-# df['Hour'] = df['Hour'].astype(str)
-rearrange_columns = ['Date Time', 'Date', 'Time', 'Hour', 'Voltage', 'Current', 'Power (W)', 'Power (KW)']
-df = df[rearrange_columns]
-unique_date = df['Date'].unique()
-filter_daily_values = df[(df['Date'] > '2022-06-24') & (df['Date'] <= unique_date[-2])][
-    ['Date', 'Hour', 'Power (KW)']]
-daily_hourly_values = filter_daily_values.groupby(['Date', 'Hour'])['Power (KW)'].sum().reset_index()
-
-header_list = ['Date', 'Time', 'SolarIrradiance (W/m2)', 'weather status', 'Temp (°C)', 'RealFeelTemp (°C)',
-               'DewPoint (°C)',
-               'Wind (km/h)',
-               'Direction', 'Hum (%)', 'Visibility (km)', 'UVIndex', 'UVIndexText', 'PreProbability (%)',
-               'RainProbability (%)',
-               'CloudCover (%)']
-weather_data = pd.read_csv(
-    'https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/hourly_weather_forecasted_data.csv',
-    names = header_list,
-    encoding = 'unicode_escape')
-weather_data.drop(['Date', 'Time', 'DewPoint (°C)', 'Direction', 'Visibility (km)',
-                   'UVIndexText', 'PreProbability (%)', 'RainProbability (%)', 'weather status', 'Hum (%)',
-                   'CloudCover (%)', 'Temp (°C)'], axis = 1, inplace = True)
-
-df1 = pd.concat([daily_hourly_values, weather_data], axis = 1)
-df1.drop(['Date', 'Hour'], axis = 1, inplace = True)
-df1.loc[df1['SolarIrradiance (W/m2)'] == 0, ['RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']] = 0
-
 font_awesome = "https://use.fontawesome.com/releases/v5.10.2/css/all.css"
 meta_tags = [{"name": "viewport", "content": "width=device-width"}]
 external_stylesheets = [meta_tags, font_awesome]
@@ -68,6 +28,46 @@ html.Div([
 
 
 def dt_regression_chart_value(n_intervals):
+    n = 1
+    now = datetime.now() + timedelta(hours = n)
+    time_name = now.strftime('%H:%M:%S')
+    header_list = ['Date Time', 'Voltage', 'Current']
+    df = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/sensors_data.csv',
+                     names = header_list)
+    df['Power (W)'] = df['Voltage'] * df['Current']
+    df['Power (KW)'] = df['Power (W)'] / 1000
+    df['Date Time'] = pd.to_datetime(df['Date Time'])
+    df['Date'] = df['Date Time'].dt.date
+    df['Date'] = pd.to_datetime(df['Date'])
+    df['Time'] = pd.to_datetime(df['Date Time']).dt.time
+    df['Hour'] = pd.to_datetime(df['Date Time']).dt.hour
+    df['Time'] = df['Time'].astype(str)
+    # df['Hour'] = df['Hour'].astype(str)
+    rearrange_columns = ['Date Time', 'Date', 'Time', 'Hour', 'Voltage', 'Current', 'Power (W)', 'Power (KW)']
+    df = df[rearrange_columns]
+    unique_date = df['Date'].unique()
+    filter_daily_values = df[(df['Date'] > '2022-06-24') & (df['Date'] <= unique_date[-2])][
+        ['Date', 'Hour', 'Power (KW)']]
+    daily_hourly_values = filter_daily_values.groupby(['Date', 'Hour'])['Power (KW)'].sum().reset_index()
+
+    header_list = ['Date', 'Time', 'SolarIrradiance (W/m2)', 'weather status', 'Temp (°C)', 'RealFeelTemp (°C)',
+                   'DewPoint (°C)',
+                   'Wind (km/h)',
+                   'Direction', 'Hum (%)', 'Visibility (km)', 'UVIndex', 'UVIndexText', 'PreProbability (%)',
+                   'RainProbability (%)',
+                   'CloudCover (%)']
+    weather_data = pd.read_csv(
+        'https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/hourly_weather_forecasted_data.csv',
+        names = header_list,
+        encoding = 'unicode_escape')
+    weather_data.drop(['Date', 'Time', 'DewPoint (°C)', 'Direction', 'Visibility (km)',
+                       'UVIndexText', 'PreProbability (%)', 'RainProbability (%)', 'weather status', 'Hum (%)',
+                       'CloudCover (%)', 'Temp (°C)'], axis = 1, inplace = True)
+
+    df1 = pd.concat([daily_hourly_values, weather_data], axis = 1)
+    df1.drop(['Date', 'Hour'], axis = 1, inplace = True)
+    df1.loc[df1['SolarIrradiance (W/m2)'] == 0, ['RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']] = 0
+
     if time_name >= '00:00:00' and time_name <= '11:59:59':
         count_total_rows = len(df1) - 12
         independent_columns = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']][
