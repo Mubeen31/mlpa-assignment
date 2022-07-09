@@ -7,19 +7,9 @@ from dash.exceptions import PreventUpdate
 import pandas as pd
 from datetime import datetime
 from components.last_data_update_time import last_data_update_time_value
-# from components.header import header_value
-from components.solar_first_card import solar_first_card_value
-from components.solar_second_card import solar_second_card_value
-from components.energy_forcasting_card import random_forest_regression_card_value
-from components.solar_third_card import solar_third_card_value
-from components.solar_fourth_card import solar_fourth_card_value
-from components.solar_fifth_card import solar_fifth_card_value
-from components.solar_current_power_chart import solar_current_power_chart_value
-from components.solar_today_power_chart import solar_today_power_chart_value
 from components.solar_yesterday_power_chart import solar_yesterday_power_chart_value
-from components.energy_forecasting import energy_forecasting_chart_value
-from components.random_forest_regression import random_forest_regression_chart_value, n_estimator_list, \
-    random_state_list
+from components.dt_regression import dt_regression_chart_value
+from components.knn_regression import knn_regression_chart_value, n_neighbors_list
 from components.summary import summary_value
 from components.current_weather import current_weather_value
 from components.first_hour_forecast import first_hour_forecast_weather_value
@@ -67,61 +57,53 @@ tab_selected_style = {
     # 'width': '120px',
 }
 
-solar_current_power_chart = dcc.Graph(id = 'solar_current_power_chart',
-                                      animate = True,
-                                      config = {'displayModeBar': False},
-                                      className = 'background2')
-solar_today_power_chart = dcc.Graph(id = 'solar_today_power_chart',
-                                    animate = True,
-                                    config = {'displayModeBar': False},
-                                    className = 'background2')
 solar_yesterday_power_chart = dcc.Graph(id = 'solar_yesterday_power_chart',
                                         animate = True,
                                         config = {'displayModeBar': False},
                                         className = 'background2')
-energy_forcasting_chart = dcc.Graph(id = 'energy_forcasting_chart',
-                                    animate = True,
-                                    config = {'displayModeBar': False},
-                                    className = 'background2')
-random_forest_regression_chart = html.Div([
+dt_regression_chart = dcc.Graph(id = 'dt_regression_chart',
+                                animate = True,
+                                config = {'displayModeBar': False},
+                                className = 'background2')
+knn_regression_chart = html.Div([
     html.Div([
         html.Div([
-            dcc.Graph(id = 'random_forest_regression_chart',
+            dcc.Graph(id = 'knn_regression_chart',
                       animate = True,
                       config = {'displayModeBar': False},
                       className = 'background2')
         ], className = 'random_forest_regression_chart'),
         html.Div([
             html.Div([
-                html.P('N estimators',
+                html.P('N neighbors',
                        style = {'color': '#D35940'},
                        className = 'drop_down_list_title'
                        ),
-                dcc.Dropdown(id = 'select_trees',
+                dcc.Dropdown(id = 'select_neighbors',
                              multi = False,
                              clearable = True,
                              disabled = False,
                              style = {'display': True},
-                             value = 100,
-                             placeholder = 'Select trees',
-                             options = n_estimator_list,
+                             value = 1,
+                             placeholder = 'Select neighbors',
+                             options = n_neighbors_list,
                              className = 'drop_down_list'),
             ], className = 'title_drop_down_list'),
-            html.Div([
-                html.P('Random states',
-                       style = {'color': '#D35940'},
-                       className = 'drop_down_list_title'
-                       ),
-                dcc.Dropdown(id = 'select_random_state',
-                             multi = False,
-                             clearable = True,
-                             disabled = False,
-                             style = {'display': True},
-                             value = 0,
-                             placeholder = 'Select random states',
-                             options = random_state_list,
-                             className = 'drop_down_list'),
-            ], className = 'title_drop_down_list')
+            # html.Div([
+            #     html.P('Random states',
+            #            style = {'color': '#D35940'},
+            #            className = 'drop_down_list_title'
+            #            ),
+            #     dcc.Dropdown(id = 'select_random_state',
+            #                  multi = False,
+            #                  clearable = True,
+            #                  disabled = False,
+            #                  style = {'display': True},
+            #                  value = 0,
+            #                  placeholder = 'Select random states',
+            #                  options = random_state_list,
+            #                  className = 'drop_down_list'),
+            # ], className = 'title_drop_down_list')
         ], className = 'drop_down_list_row')
     ], className = 'three_elements_column'),
 
@@ -161,61 +143,25 @@ app.layout = html.Div([
                      interval = 60000,
                      n_intervals = 0),
     ]),
-    html.Div([
-        dcc.Interval(id = 'solar_energy_forcasting_card',
-                     interval = 10000,
-                     n_intervals = 0),
-    ]),
 
     html.Div([
         html.Div([
-            html.Div([
-                html.Div(id = 'solar_first_card')
-            ], className = 'adjust_card'),
-            html.Div([
-                html.Div(id = 'solar_second_card')
-            ], className = 'adjust_card'),
-            html.Div([
-                html.Div(id = 'solar_third_card')
-            ], className = 'adjust_card'),
-            html.Div([
-                html.Div(id = 'solar_fourth_card')
-            ], className = 'adjust_card'),
-            html.Div([
-                html.Div(id = 'solar_fifth_card')
-            ], className = 'adjust_last_card'),
-        ], className = 'background1')
-    ], className = 'adjust_margin1'),
-    html.Div([
-        html.Div([
-            dcc.Tabs(value = 'random_forest_regression_chart', children = [
-                dcc.Tab(solar_current_power_chart,
-                        label = 'Current Power',
-                        value = 'solar_current_power_chart',
-                        style = tab_style1,
-                        selected_style = tab_selected_style,
-                        ),
-                dcc.Tab(solar_today_power_chart,
-                        label = 'Today Energy',
-                        value = 'solar_today_power_chart',
-                        style = tab_style,
-                        selected_style = tab_selected_style,
-                        ),
+            dcc.Tabs(value = 'knn_regression_chart', children = [
                 dcc.Tab(solar_yesterday_power_chart,
                         label = 'Yesterday Energy',
                         value = 'solar_yesterday_power_chart',
+                        style = tab_style1,
+                        selected_style = tab_selected_style,
+                        ),
+                dcc.Tab(dt_regression_chart,
+                        label = 'DTR Model',
+                        value = 'dt_regression_chart',
                         style = tab_style,
                         selected_style = tab_selected_style,
                         ),
-                dcc.Tab(energy_forcasting_chart,
-                        label = 'MVLR Model',
-                        value = 'energy_forcasting_chart',
-                        style = tab_style,
-                        selected_style = tab_selected_style,
-                        ),
-                dcc.Tab(random_forest_regression_chart,
-                        label = 'RFR Model',
-                        value = 'random_forest_regression_chart',
+                dcc.Tab(knn_regression_chart,
+                        label = 'KNN Model',
+                        value = 'knn_regression_chart',
                         style = tab_style,
                         selected_style = tab_selected_style,
                         ),
@@ -257,78 +203,6 @@ def last_data_update_time_value_callback(n_intervals):
     return last_data_update_time_value_data
 
 
-# @app.callback(Output('get_date_time', 'children'),
-#               [Input('update_time', 'n_intervals')])
-# def header_value_callback(n_intervals):
-#     header_value_data = header_value(n_intervals)
-#
-#     return header_value_data
-
-
-@app.callback(Output('solar_first_card', 'children'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_first_card_value_callback(n_intervals):
-    solar_first_card_value_data = solar_first_card_value(n_intervals)
-
-    return solar_first_card_value_data
-
-
-@app.callback(Output('solar_second_card', 'children'),
-              [Input('solar_energy_forcasting_card', 'n_intervals')],
-              [Input('select_trees', 'value')],
-              [Input('select_random_state', 'value')])
-def solar_energy_forcasting_second_card_value_callback(n_intervals, select_trees, select_random_state):
-    if n_intervals == None or n_intervals % 2 == 1:
-        solar_energy_forcasting_second_card_value_data = solar_second_card_value(n_intervals)
-    elif n_intervals % 2 == 0:
-        solar_energy_forcasting_second_card_value_data = random_forest_regression_card_value(n_intervals, select_trees,
-                                                                                             select_random_state)
-    else:
-        solar_energy_forcasting_second_card_value_data = "None"
-
-    return solar_energy_forcasting_second_card_value_data
-
-
-@app.callback(Output('solar_third_card', 'children'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_third_card_value_callback(n_intervals):
-    solar_third_card_value_data = solar_third_card_value(n_intervals)
-
-    return solar_third_card_value_data
-
-
-@app.callback(Output('solar_fourth_card', 'children'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_fourth_card_value_callback(n_intervals):
-    solar_fourth_card_value_data = solar_fourth_card_value(n_intervals)
-
-    return solar_fourth_card_value_data
-
-
-@app.callback(Output('solar_fifth_card', 'children'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_fifth_card_value_callback(n_intervals):
-    solar_fifth_card_value_data = solar_fifth_card_value(n_intervals)
-
-    return solar_fifth_card_value_data
-
-
-@app.callback(Output('solar_current_power_chart', 'figure'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_current_power_chart_value_callback(n_intervals):
-    solar_current_power_chart_value_data = solar_current_power_chart_value(n_intervals)
-
-    return solar_current_power_chart_value_data
-
-
-@app.callback(Output('solar_today_power_chart', 'figure'),
-              [Input('update_date_time_value', 'n_intervals')])
-def solar_today_power_chart_value_callback(n_intervals):
-    solar_today_power_chart_value_data = solar_today_power_chart_value(n_intervals)
-
-    return solar_today_power_chart_value_data
-
-
 @app.callback(Output('solar_yesterday_power_chart', 'figure'),
               [Input('update_date_time_value', 'n_intervals')])
 def solar_yesterday_power_chart_value_callback(n_intervals):
@@ -337,31 +211,28 @@ def solar_yesterday_power_chart_value_callback(n_intervals):
     return solar_yesterday_power_chart_value_data
 
 
-@app.callback(Output('energy_forcasting_chart', 'figure'),
+@app.callback(Output('dt_regression_chart', 'figure'),
               [Input('update_date_time_value', 'n_intervals')])
-def energy_forecasting_chart_value_callback(n_intervals):
-    energy_forecasting_chart_value_data = energy_forecasting_chart_value(n_intervals)
+def dt_regression_chart_value_callback(n_intervals):
+    dt_regression_chart_value_data = dt_regression_chart_value(n_intervals)
 
-    return energy_forecasting_chart_value_data
+    return dt_regression_chart_value_data
 
 
-@app.callback(Output('random_forest_regression_chart', 'figure'),
+@app.callback(Output('knn_regression_chart', 'figure'),
               [Input('update_date_time_value', 'n_intervals')],
-              [Input('select_trees', 'value')],
-              [Input('select_random_state', 'value')])
-def random_forest_regression_chart_value_callback(n_intervals, select_trees, select_random_state):
-    random_forest_regression_chart_value_data = random_forest_regression_chart_value(n_intervals, select_trees,
-                                                                                     select_random_state)
+              [Input('select_neighbors', 'value')])
+def knn_regression_chart_value_callback(n_intervals, select_neighbors):
+    knn_regression_chart_value_data = knn_regression_chart_value(n_intervals, select_neighbors)
 
-    return random_forest_regression_chart_value_data
+    return knn_regression_chart_value_data
 
 
 @app.callback(Output('summary', 'children'),
               [Input('update_date_time_value', 'n_intervals')],
-              [Input('select_trees', 'value')],
-              [Input('select_random_state', 'value')])
-def summary_value_callback(n_intervals, select_trees, select_random_state):
-    summary_value_data = summary_value(n_intervals, select_trees, select_random_state)
+              [Input('select_neighbors', 'value')])
+def summary_value_callback(n_intervals, select_neighbors):
+    summary_value_data = summary_value(n_intervals, select_neighbors)
 
     return summary_value_data
 
@@ -373,17 +244,6 @@ def current_weather_value_callback(n_intervals):
 
     return current_weather_value_data
 
-
-# @app.callback(Output('forecast_weather', 'children'),
-#               [Input('update_forecast_value', 'n_intervals')])
-# def forecast_weather_value_callback(n_intervals):
-#     if n_intervals == None or n_intervals % 2 == 1:
-#         forecast_weather_value_data = forecast_weather_value(n_intervals)
-#     elif n_intervals % 2 == 0:
-#         forecast_weather_value_data = forecast_weather2_value(n_intervals)
-#     else:
-#         forecast_weather_value_data = "None"
-#     return forecast_weather_value_data
 
 @app.callback(Output('first_hour_forecast', 'children'),
               [Input('update_date_time_value', 'n_intervals')])
