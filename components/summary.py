@@ -30,7 +30,6 @@ html.Div([
 ]),
 
 n_neighbors_list = [1, 2, 3, 4, 5]
-# random_state_list = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110]
 
 dcc.Dropdown(id = 'select_neighbors',
              multi = False,
@@ -41,16 +40,6 @@ dcc.Dropdown(id = 'select_neighbors',
              placeholder = 'Select neighbors',
              options = n_neighbors_list,
              className = 'drop_down_list'),
-
-# dcc.Dropdown(id = 'select_random_state',
-#              multi = False,
-#              clearable = True,
-#              disabled = False,
-#              style = {'display': True},
-#              value = 0,
-#              placeholder = 'Select random states',
-#              options = random_state_list,
-#              className = 'drop_down_list'),
 
 
 def summary_value(n_intervals, select_neighbors):
@@ -320,7 +309,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Multivariable Linear Regression Model', className = 'error_text'),
+                            html.P('Decision Tree Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(data_12),
@@ -350,7 +339,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Random Forest Regression Model', className = 'error_text'),
+                            html.P('K Nearest Neighbors Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(rn_data_12),
@@ -408,7 +397,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Multivariable Linear Regression Model', className = 'error_text'),
+                            html.P('Decision Tree Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(mv_pe),
@@ -438,7 +427,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Random Forest Regression Model', className = 'error_text'),
+                            html.P('K Nearest Neighbors Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(rfr_yes_pe),
@@ -500,7 +489,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Multivariable Linear Regression Model', className = 'error_text'),
+                            html.P('Decision Tree Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(data_24),
@@ -531,7 +520,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Random Forest Regression Model', className = 'error_text'),
+                            html.P('K Nearest Neighbors Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(rn_data_24),
@@ -589,7 +578,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Multivariable Linear Regression Model', className = 'error_text'),
+                            html.P('Decision Tree Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(mv_pe),
@@ -620,7 +609,7 @@ def summary_value(n_intervals, select_neighbors):
 
                     html.Div([
                         html.Div([
-                            html.P('Random Forest Regression Model', className = 'error_text'),
+                            html.P('K Nearest Neighbors Regression Model', className = 'error_text'),
                         ], className = 'error_bg1'),
                         html.Div([
                             html.P('{0:,.2f} KWh'.format(rfr_yes_pe),
