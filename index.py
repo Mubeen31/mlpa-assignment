@@ -119,7 +119,7 @@ app.layout = html.Div([
                      style = {'height': '30px'},
                      className = 'title_image'
                      ),
-            html.H6('Solar Energy Predictions',
+            html.H6('Solar Energy Predictions Using K Nearest Neighbors and Decision Tree Regressions Models',
                     style = {'color': '#1a1a1a'},
                     className = 'title'
                     ),

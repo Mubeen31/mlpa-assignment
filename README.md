@@ -1,4 +1,4 @@
 ### Solar power predictions in python by plotly dash ###
-https://solar-energy-predictions.herokuapp.com/
+https://mlpa-assignment.herokuapp.com/
 
 ![](Untitled.png)
