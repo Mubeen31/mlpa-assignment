@@ -47,7 +47,7 @@ def summary_value(n_intervals, select_neighbors):
     now = datetime.now() + timedelta(hours = n)
     time_name = now.strftime('%H:%M:%S')
     header_list = ['Date Time', 'Voltage', 'Current']
-    df = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/sensors_data.csv', names = header_list)
+    df = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-and-weather-data/main/sensors_data.csv', names = header_list)
     df['Power (W)'] = df['Voltage'] * df['Current']
     df['Power (KW)'] = df['Power (W)'] / 1000
     df['Date Time'] = pd.to_datetime(df['Date Time'])
@@ -71,7 +71,7 @@ def summary_value(n_intervals, select_neighbors):
                    'RainProbability (%)',
                    'CloudCover (%)']
     weather_data = pd.read_csv(
-        'https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/hourly_weather_forecasted_data.csv',
+        'https://raw.githubusercontent.com/Mubeen31/solar-power-and-weather-data/main/hourly_weather_forecasted_data.csv',
         names = header_list,
         encoding = 'unicode_escape')
     weather_data.drop(['Date', 'Time', 'DewPoint (°C)', 'Direction', 'Visibility (km)',
@@ -95,7 +95,7 @@ def summary_value(n_intervals, select_neighbors):
                    'Direction', 'Hum (%)', 'Visibility (km)', 'UVIndex', 'UVIndexText', 'PreProbability (%)',
                    'RainProbability (%)',
                    'CloudCover (%)']
-    weather_data1 = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-predictions/main/hourly_weather_forecasted_data.csv', names = header_list, encoding = 'unicode_escape')
+    weather_data1 = pd.read_csv('https://raw.githubusercontent.com/Mubeen31/solar-power-and-weather-data/main/hourly_weather_forecasted_data.csv', names = header_list, encoding = 'unicode_escape')
     weather_unique_date = weather_data1['Date'].unique()
     filter_weather_yes_values = weather_data1[
         (weather_data1['Date'] >= '2022-06-25') &
