@@ -36,7 +36,7 @@ dcc.Dropdown(id = 'select_neighbors',
              clearable = True,
              disabled = False,
              style = {'display': True},
-             value = 5,
+             value = 6,
              placeholder = 'Select neighbors',
              options = n_neighbors_list,
              className = 'drop_down_list'),
@@ -120,7 +120,7 @@ def summary_value(n_intervals, select_neighbors):
     mv_mae = metrics.mean_absolute_error(last_day_hourly_values['Power (KW)'], predicted_data['Power (KW)'])
     mv_rs = metrics.r2_score(last_day_hourly_values['Power (KW)'], predicted_data['Power (KW)'])
 
-    rfr_yes = KNeighborsRegressor(n_neighbors = 5)
+    rfr_yes = KNeighborsRegressor(n_neighbors = 6, weights = 'distance')
     rfr_yes.fit(yes_independent_columns, yes_dependent_column)
     rfr_yes_return_array = rfr_yes.predict(forcasted_yes_values)
     rfr_yes_predicted_data = pd.DataFrame(rfr_yes_return_array, columns = ['Power (KW)'])
@@ -210,7 +210,7 @@ def summary_value(n_intervals, select_neighbors):
                               0:count_total_rows]
         dependent_column = df1['Power (KW)'][0:count_total_rows]
 
-        rfr = KNeighborsRegressor(n_neighbors = select_neighbors)
+        rfr = KNeighborsRegressor(n_neighbors = select_neighbors, weights = 'distance')
         rfr.fit(independent_columns, dependent_column)
 
         forcasted_data = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']].tail(12)
@@ -246,7 +246,7 @@ def summary_value(n_intervals, select_neighbors):
                               0:count_total_rows]
         dependent_column = df1['Power (KW)'][0:count_total_rows]
 
-        rfr = KNeighborsRegressor(n_neighbors = select_neighbors)
+        rfr = KNeighborsRegressor(n_neighbors = select_neighbors, weights = 'distance')
         rfr.fit(independent_columns, dependent_column)
 
         forcasted_data = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']].tail(24)

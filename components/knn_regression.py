@@ -35,7 +35,7 @@ dcc.Dropdown(id = 'select_neighbors',
              clearable = True,
              disabled = False,
              style = {'display': True},
-             value = 5,
+             value = 6,
              placeholder = 'Select neighbors',
              options = n_neighbors_list,
              className = 'drop_down_list'),
@@ -99,7 +99,7 @@ def knn_regression_chart_value(n_intervals, select_neighbors):
         independent_columns = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']][0:count_total_rows]
         dependent_column = df1['Power (KW)'][0:count_total_rows]
 
-        knn = KNeighborsRegressor(n_neighbors = select_neighbors)
+        knn = KNeighborsRegressor(n_neighbors = select_neighbors, weights = 'distance')
         knn.fit(independent_columns, dependent_column)
 
         forcasted_data = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']].tail(12)
@@ -121,7 +121,7 @@ def knn_regression_chart_value(n_intervals, select_neighbors):
                               0:count_total_rows]
         dependent_column = df1['Power (KW)'][0:count_total_rows]
 
-        knn = KNeighborsRegressor(n_neighbors = select_neighbors)
+        knn = KNeighborsRegressor(n_neighbors = select_neighbors, weights = 'distance')
         knn.fit(independent_columns, dependent_column)
 
         forcasted_data = df1[['SolarIrradiance (W/m2)', 'RealFeelTemp (°C)', 'Wind (km/h)', 'UVIndex']].tail(24)
