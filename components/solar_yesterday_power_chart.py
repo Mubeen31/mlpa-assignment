@@ -189,7 +189,7 @@ def solar_yesterday_power_chart_value(n_intervals):
     return_array = yes_reg.predict(forcasted_yes_values)
     predicted_data = pd.DataFrame(return_array, columns = ['Power (KW)'])
 
-    rfr_yes = KNeighborsRegressor(n_neighbors = 6, weights = 'distance')
+    rfr_yes = KNeighborsRegressor(n_neighbors = 5, weights = 'distance')
     rfr_yes.fit(yes_independent_columns1, yes_dependent_column)
     rfr_yes_return_array = rfr_yes.predict(forcasted_yes_values1)
     rfr_yes_predicted_data = pd.DataFrame(rfr_yes_return_array, columns = ['Power (KW)'])
